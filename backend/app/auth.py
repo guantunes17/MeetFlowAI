@@ -1,6 +1,7 @@
 import os
 import re
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 from dotenv import load_dotenv
 from jose import JWTError, jwt
@@ -8,7 +9,28 @@ from passlib.context import CryptContext
 
 load_dotenv()
 
-SECRET_KEY = os.getenv("APP_SECRET_KEY", "meetflow_dev_secret_change_me")
+
+def _resolve_secret_key() -> str:
+    env_secret = os.getenv("APP_SECRET_KEY", "").strip()
+    if env_secret:
+        return env_secret
+
+    secret_path = os.getenv("MEETFLOW_APP_SECRET_PATH", "").strip()
+    if secret_path:
+        path = Path(secret_path).expanduser().resolve()
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if path.exists():
+            value = path.read_text(encoding="utf-8").strip()
+            if value:
+                return value
+        generated = os.urandom(48).hex()
+        path.write_text(generated, encoding="utf-8")
+        return generated
+
+    return "meetflow_dev_secret_change_me"
+
+
+SECRET_KEY = _resolve_secret_key()
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 10
 

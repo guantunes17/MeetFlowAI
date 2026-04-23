@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   AlertTriangle,
   CalendarClock,
@@ -22,8 +22,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/lib/api";
 import { fadeInUp, MOTION } from "@/lib/motion";
 
-export default function MeetingDetailsPage() {
-  const { id } = useParams();
+function LoadingSkeleton() {
+  return (
+    <Card className="overflow-hidden">
+      <CardHeader>
+        <CardTitle>Carregando reunião…</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="h-9 animate-pulse rounded-lg border border-slate-800 bg-slate-900/70" />
+        <div className="h-28 animate-pulse rounded-xl border border-slate-800 bg-slate-900/70" />
+        <div className="h-52 animate-pulse rounded-xl border border-slate-800 bg-slate-900/70" />
+      </CardContent>
+    </Card>
+  );
+}
+
+function MeetingDetailsContent() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const router = useRouter();
   const { token, refreshAll } = useMeetFlow();
   const [meeting, setMeeting] = useState(null);
@@ -84,18 +100,7 @@ export default function MeetingDetailsPage() {
   }
 
   if (!meeting) {
-    return (
-      <Card className="overflow-hidden">
-        <CardHeader>
-          <CardTitle>Carregando reunião…</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="h-9 animate-pulse rounded-lg border border-slate-800 bg-slate-900/70" />
-          <div className="h-28 animate-pulse rounded-xl border border-slate-800 bg-slate-900/70" />
-          <div className="h-52 animate-pulse rounded-xl border border-slate-800 bg-slate-900/70" />
-        </CardContent>
-      </Card>
-    );
+    return <LoadingSkeleton />;
   }
 
   return (
@@ -173,6 +178,14 @@ export default function MeetingDetailsPage() {
         </Tabs>
       </motion.div>
     </div>
+  );
+}
+
+export default function MeetingDetailsPage() {
+  return (
+    <Suspense fallback={<LoadingSkeleton />}>
+      <MeetingDetailsContent />
+    </Suspense>
   );
 }
 

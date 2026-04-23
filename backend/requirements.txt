@@ -14,3 +14,4 @@ httpx
 python-docx
 reportlab
 openai-whisper
+pyinstaller
