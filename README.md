@@ -1,4 +1,4 @@
-# MeetFlow AI MVP (Privado)
+# MeetFlow AI MVP
 
 MVP funcional para transformar reunioes em:
 
@@ -13,7 +13,7 @@ MVP funcional para transformar reunioes em:
 
 - `backend`: FastAPI + SQLite local + Whisper + LLM (OpenAI opcional)
 - `frontend`: Next.js + React + Tailwind CSS
-- `desktop-ready`: estrutura preparada para wrapper Electron/Tauri
+- `desktop-ready`: empacotamento desktop via Tauri + sidecar FastAPI
 
 ## Fluxo principal
 
@@ -29,19 +29,49 @@ MVP funcional para transformar reunioes em:
 
 ## Credenciais bootstrap
 
-- email: `admin@meetflow.local`
+- email: `admin@meetflow.app`
 - senha: `admin123`
 
-## Como rodar (Docker)
+## Como rodar (desenvolvimento)
 
-Na pasta `novo_web`:
+Backend:
 
 ```bash
-docker compose up --build
+cd backend
+python -m pip install -r requirements.txt
+python -m alembic upgrade head
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Frontend: `http://localhost:3000`  
+Frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend: `http://localhost:3000`
 Backend: `http://localhost:8000`
+
+## Build desktop com Tauri (Windows)
+
+Pré-requisitos:
+
+- Rust/Cargo instalados ([rustup.rs](https://rustup.rs/))
+- Python no PATH
+- Node.js + npm
+- PyInstaller (`python -m pip install pyinstaller`)
+
+Comandos:
+
+```bash
+cd frontend
+npm install
+npm run tauri:build
+```
+
+O instalador/app será gerado em `frontend/src-tauri/target/release/bundle`.
 
 ## Variaveis de ambiente (backend)
 

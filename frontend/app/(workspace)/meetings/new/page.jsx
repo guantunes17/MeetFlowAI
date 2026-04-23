@@ -66,7 +66,7 @@ export default function NewMeetingPage() {
       setCurrentStep(3);
       await delay(180, signal);
       await refreshAll();
-      router.push(`/meetings/${created.id}`);
+      router.push(`/meetings/view?id=${created.id}`);
     } catch (err) {
       if (err?.name === "AbortError") {
         setError("Processamento interrompido.");

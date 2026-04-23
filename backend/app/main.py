@@ -38,7 +38,8 @@ _login_lock_until: dict[str, float] = {}
 # CORS: não use allow_origins=["*"] com allow_credentials=True (comportamento inválido; o browser bloqueia).
 _cors = os.getenv(
     "CORS_ALLOW_ORIGINS",
-    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001",
+    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001"
+    ",tauri://localhost,http://tauri.localhost,https://tauri.localhost",
 )
 _cors_list = [o.strip() for o in _cors.split(",") if o.strip()]
 MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_MB", "100")) * 1024 * 1024

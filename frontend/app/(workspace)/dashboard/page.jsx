@@ -100,7 +100,7 @@ export default function DashboardPage() {
                 transition={reduceMotion ? { duration: 0 } : { delay: 0.02 * index, duration: 0.28 }}
               >
                 <Link
-                  href={`/meetings/${meeting.id}`}
+                  href={`/meetings/view?id=${meeting.id}`}
                   className="group block rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 transition hover:border-lime-400/80"
                 >
                   <div className="flex items-center justify-between gap-3">
